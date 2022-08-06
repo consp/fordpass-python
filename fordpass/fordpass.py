@@ -422,12 +422,9 @@ class Vehicle(object):
         }
 
         url = "https://www.digitalservices.ford.com/owner/api/v2/global/service-history?vin=%s&countryCode=%s&languageCode=%s" % (self.vin, countryCode, language[:2])
-        print(url)
         r = self.__makeRequest(
             "GET", url, None, None, add_headers=headers
         )
-        print(r)
-        print(r.text)
 
         return r.json()
 
