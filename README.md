@@ -4,7 +4,14 @@
 
 This is a basic Python wrapper around the FordPass APIs. The wrapper provides methods to return vehicle status as well as some basic commands, e.g. start/stop, lock/unlock.
 
-It's more or less a straight port of @d4v3y0rk's NPM module [d4v3y0rk/ffpass](https://github.com/d4v3y0rk/ffpass-module) - props to him for his work figuring out the relevant API requests needed.
+Original:
+* It's more or less a straight port of @d4v3y0rk's NPM module [d4v3y0rk/ffpass](https://github.com/d4v3y0rk/ffpass-module) - props to him for his work figuring out the relevant API requests needed.
+
+Additions:
+* Based on the work of [clarkd/fordpass-python](https://github.com/clarkd/fordpass-python)
+* Merged with the work of [clarkd/fordpass-python](https://github.com/clarkd/fordpass-python) to get the auth up to speed with the changed by Ford
+* Used data from the iOS widget from [tonesto7/fordpass-scriptable](https://github.com/tonesto7/fordpass-scriptable) for the urls and some information about the variables used in the vehicle status and service logs calls
+* Added charge logs retrieval
 
 ## Features
 
@@ -14,6 +21,9 @@ It's more or less a straight port of @d4v3y0rk's NPM module [d4v3y0rk/ffpass](ht
 * Stop the engine (if supported)
 * Lock the doors
 * Unlock the doors
+* Get charge logs
+* Get vehicle status information
+* Get service logs
 
 ## Install
 Install using pip:
@@ -26,6 +36,7 @@ pip install fordpass
 
 To test the libary there is a demo script `demo.py`.
 
+Note: the demo uses the old version and might not work.
 ```
 demo.py USERNAME PASSWORD VIN
 ```
@@ -36,10 +47,3 @@ e.g.
 demo.py test@test.com mypassword WX12345678901234
 ```
 
-## Publishing new versions of this package
-
-1. Bump the version number inside `setup.py`.
-2. Build the package: `python setup.py sdist bdist_wheel`.
-3. Upload to TestPyPi using `twine upload --repository-url https://test.pypi.org/legacy/ dist/*` and verify everything is as expected.
-4. Upload to PyPi using `twine upload dist/*`.
-5. All done!
