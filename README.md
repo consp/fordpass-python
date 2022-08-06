@@ -9,7 +9,7 @@ Original:
 
 Additions:
 * Based on the work of [clarkd/fordpass-python](https://github.com/clarkd/fordpass-python)
-* Merged with the work of [clarkd/fordpass-python](https://github.com/clarkd/fordpass-python) to get the auth up to speed with the changed by Ford
+* Merged with the work of [NicKoehler/fordpass-python](https://github.com/NicKoehler/fordpass-python) to get the auth up to speed with the changed by Ford
 * Used data from the iOS widget from [tonesto7/fordpass-scriptable](https://github.com/tonesto7/fordpass-scriptable) for the urls and some information about the variables used in the vehicle status and service logs calls
 * Added charge logs retrieval
 
