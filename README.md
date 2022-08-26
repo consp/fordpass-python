@@ -26,7 +26,9 @@ Additions:
 * Get service logs
 
 ## Install
-Install using pip:
+Note: this version is not in PyPi, you will have to install it yourself.
+
+Install the original version using pip:
 
 ```
 pip install fordpass
@@ -34,16 +36,4 @@ pip install fordpass
 
 ## Demo
 
-To test the libary there is a demo script `demo.py`.
-
-Note: the demo uses the old version and might not work.
-```
-demo.py USERNAME PASSWORD VIN
-```
-
-e.g.
-
-```
-demo.py test@test.com mypassword WX12345678901234
-```
-
+The demo is not functional at this time.
