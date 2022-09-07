@@ -409,6 +409,25 @@ class Vehicle(object):
 
         return r.json()
 
+    def trip_logs(self, timestamp=None):
+        self.__acquireToken()
+
+        data = {
+            'vin': self.vin,
+        }
+        if timestamp is not None:
+            data['nextTripTimestamp'] = timestamp
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+        }
+
+        r = self.__makeRequest(
+            "POST", f"{guardUrl}/cevs/v1/triplogs/retrieve", json.dumps(data), None#, language=language, countryCode=countryCode
+        )
+        return r.json()['tripLogs']
 
     # jwt required?
     def vehicleServiceHistory(self, language='en-GB', countryCode='NLD'):
@@ -649,4 +668,3 @@ class Vehicle(object):
             return self.__pollStatus(url, result["commandId"])
         else:
             command.raise_for_status()
-
