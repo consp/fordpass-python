@@ -571,11 +571,17 @@ class Vehicle(object):
             start = item['startBatteryLevel']
             charged = end - start
             kwh = (max_kwh * (1.0 - reserve)) * (charged / 100.0)
+            data = self.get_charge_status_by_id(item['chargeId'])
+
             logs.append({
                 'id': item['chargeId'],
                 'kwh': kwh,
-                'charged': charged,
-                'date': datetime.strptime(item['plugOutTime'], "%m-%d-%Y %H:%M:%S.000")
+                'percent': charged,
+                'start': start,
+                'end': end,
+                'date': datetime.strptime(item['plugOutTime'], "%m-%d-%Y %H:%M:%S.000"),
+                'time': data['totalChargeTime'],
+                'location': data['locationName'],
                 })
         return logs
 
@@ -583,7 +589,7 @@ class Vehicle(object):
         self.__acquireToken()
 
         data = {
-            'chargeId': id, #33997617,
+            'chargeId': id,
             'vin': self.vin,
         }
 
