@@ -394,7 +394,7 @@ class Vehicle(object):
         )
         return r.json()
 
-    def vehicleOTAInfo(self, countryCode="NLD"):
+    def vehicleOTAInfo(self, countryCode="USA"):
         self.__acquireToken()
 
         headers = {
