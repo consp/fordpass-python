@@ -409,6 +409,26 @@ class Vehicle(object):
 
         return r.json()
 
+
+    def chargelocation_get(self):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+        }
+        
+        data = {
+            'vin': self.vin,
+        }
+        
+        r = self.__makeRequest(
+            "POST", f"{guardUrl}/cevs/v1/otechargelimit/retrieve", json.dumps(data), None
+        )
+
+        return r.json()
+
     def trip_logs(self, timestamp=None):
         self.__acquireToken()
 
@@ -446,6 +466,17 @@ class Vehicle(object):
         )
 
         return r.json()
+
+    def refresh(self):
+        """
+        Issue a Refresh
+        """
+        
+        self.__acquireToken()
+
+        return self.__makeRequest(
+            "PUT", f"{baseUrl}/api/vehicles/v2/{self.vin}/status", None, None
+        )
 
     def start(self):
         """
@@ -519,6 +550,97 @@ class Vehicle(object):
         _LOGGER.debug(r.text)
         return r.json()
 
+    def get_charge_stations_saved(self, language='en-GB', countryCode='NLD'):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+            'vin': self.vin,
+        }
+
+        r = self.__makeRequest(
+            "GET",
+            f"{guardUrl}/vpoi/chargestations/v3/saved", None, None, language=language, countryCode=countryCode, add_headers=headers
+        )
+        _LOGGER.debug(r.text)
+        return r.json()
+
+    def get_charge_stations_plugstatus(self, language='en-GB', countryCode='NLD'):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+            'vin': self.vin,
+        }
+
+        r = self.__makeRequest(
+            "GET",
+            f"{guardUrl}/vpoi/chargestations/v3/plugstatus", None, None, language=language, countryCode=countryCode, add_headers=headers
+        )
+        _LOGGER.debug(r.text)
+        return r.json()
+
+    def set_charge_station_data(self, userid, locationid, savedlocationid, unsavedlocationid,  language='en-GB', countryCode='NLD', start_time="15:00", end_time="20:00"):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+            'vin': self.vin,
+        }
+
+        data = {
+            'vin': self.vin,
+            'userId': userid, 
+            'locationId': locationid,
+            'locationName': 'Werk',
+            'savedLocationId': savedlocationid,
+            'unSavedLocationId': unsavedlocationid,
+            'type': 'SAVED',
+            'chargeProfile': {
+                'chargeNow': False,
+                'utilityProvider': None,
+                'chargeSchedules': [
+                    {
+                        'days': 'WEEKDAY',
+                        'chargeWindows': 
+                        [
+                            {
+                                'startTime': start_time, 'endTime': end_time
+                            }],
+                        'desiredChargeLevel': 100
+                    },
+                    {
+                        'days': 'WEEKEND',
+                        'chargeWindows': 
+                        [
+                            {
+                                'startTime': start_time, 'endTime': end_time
+                            }],
+                        'desiredChargeLevel': 100
+                    }
+                ]
+            }
+        }
+
+        print(json.dumps(data, indent=4))
+        r = self.__makeRequest(
+            "PUT",
+            f"{guardUrl}/vpoi/chargestations/v3", json.dumps(data), None, language=language, countryCode=countryCode, add_headers=headers
+        )
+        #print(r, r.text, r.headers)
+        #_LOGGER.debug(r.text)
+        try:
+            return r.json()
+        except Exception:
+            return None
+
+
     def get_charge_status(self, language='en-GB', countryCode='NLD'):
         self.__acquireToken()
 
@@ -562,6 +684,130 @@ class Vehicle(object):
 
         _LOGGER.debug(r.text)
         return r.json()['chargeLogs']
+
+    def departure_disable(self, language='en-GB', countryCode='NLD'):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+        }
+
+        data = {
+            'vin': self.vin,
+        }
+
+        r = self.__makeRequest(
+            "POST",
+            f"{guardUrl}/cevs/v1/departuretimes/toggleoff",
+            json.dumps(data), None#, add_headers=headers,
+            )
+
+        _LOGGER.debug(r.text)
+        return r.json()
+
+    def departure_enable(self, language='en-GB', countryCode='NLD'):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+        }
+
+        data = {
+            'vin': self.vin,
+        }
+
+        r = self.__makeRequest(
+            "POST",
+            f"{guardUrl}/cevs/v1/departuretimes/toggleon",
+            json.dumps(data), None#, add_headers=headers,
+            )
+
+        _LOGGER.debug(r.text)
+        return r.json()
+
+    def departure_retrieve(self, language='en-GB', countryCode='NLD'):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+        }
+
+        data = {
+            'vin': self.vin,
+        }
+
+        r = self.__makeRequest(
+            "POST",
+            f"{guardUrl}/cevs/v1/departuretimes/retrieve",
+            json.dumps(data), None#, add_headers=headers,
+            )
+
+        _LOGGER.debug(r.text)
+        return r.json()
+
+    def departure_save(self, isenabled=False, daylist=[1], hour=0, minutes=0, temp='Off'):
+        # temp valid is 'Off', 'Cool', 'Medium', 'Warm'
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+        }
+        days = []
+        for item in daylist:
+            days.append(
+                    {
+                        'calendarDay': item,
+                        'scheduleFromCloudList':
+                       [{
+                                'hr': hour,
+                                'min': minutes,
+                                'preConditioningTemp': temp
+                        }]
+                    })
+                    
+        data = {
+            'vin': self.vin,
+            'goTimesScheduleCloudData': {
+                'calendarDaysList': days,
+            },
+            'isEnabled': 'On' if isenabled else 'Off'
+        }
+
+        r = self.__makeRequest(
+            "POST",
+            f"{guardUrl}/cevs/v1/departuretimes/save",
+            json.dumps(data), None#, add_headers=headers,
+            )
+
+        _LOGGER.debug(r.text)
+        return r.json()
+
+    def departure_deleteall(self):
+        self.__acquireToken()
+
+        headers = {
+            **apiHeaders,
+            "auth-token": self.token,
+            "Application-Id": self.region,
+        }
+        
+        data = {
+            'vin': self.vin,
+        }
+        
+        r = self.__makeRequest(
+            "POST", f"{guardUrl}/cevs/v1/departuretimes/deleteall", json.dumps(data), None
+        )
+
+        return r.json()
 
     def get_charge_status_all_calculate(self, max_kwh=14.4, reserve=0.2):
         data = self.get_charge_status_all()
