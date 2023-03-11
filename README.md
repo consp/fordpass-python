@@ -12,6 +12,8 @@ Additions:
 * Merged with the work of [NicKoehler/fordpass-python](https://github.com/NicKoehler/fordpass-python) to get the auth up to speed with the changed by Ford
 * Used data from the iOS widget from [tonesto7/fordpass-scriptable](https://github.com/tonesto7/fordpass-scriptable) for the urls and some information about the variables used in the vehicle status and service logs calls
 * Added charge logs retrieval
+* Added methods to retrieve/change the charge window (simplified)
+* Added methods to retrieve/enable/disable/delete/update departure windows (simplified)
 
 ## Features
 
